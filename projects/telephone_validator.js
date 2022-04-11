@@ -26,4 +26,4 @@ function telephoneCheck(str) {
     
     */
     return regex.test(str);
-  }
+}
