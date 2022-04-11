@@ -4,12 +4,10 @@ function convertToRoman(num) {
   
     let romStr = "";
     for (var i = dec.length; i >= 0; i--) {
-      while (dec[i] <= num) {
-        romStr += rom[i];
-        num -= dec[i];
-      }
+        while (dec[i] <= num) {
+            romStr += rom[i];
+            num -= dec[i];
+        }
     }
     return romStr;
-  }
-  
-  //convertToRoman(36);
+}
