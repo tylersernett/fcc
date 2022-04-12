@@ -11,9 +11,9 @@ function checkCashRegister(price, cash, cid) {
     } 
     
     if (total < dif) {
-      return {status: "INSUFFICIENT_FUNDS", change: []};
+        return {status: "INSUFFICIENT_FUNDS", change: []};
     } else if (total == dif) {
-      return {status: "CLOSED", change: ogcid}; //return deep copy
+        return {status: "CLOSED", change: ogcid}; //return deep copy
     }
     
     var change = [["PENNY", 0], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]];
@@ -22,25 +22,25 @@ function checkCashRegister(price, cash, cid) {
     
     //remove items from change drawer
     for (var i = vals.length; i >=0; i--) {
-      while (vals[i] <= dif && cid[i][1] > 0) {
-        change[i][1] += vals[i];
-        cid[i][1] -= vals[i];
-        dif -= vals[i]; 
-      }
+        while (vals[i] <= dif && cid[i][1] > 0) {
+            change[i][1] += vals[i];
+            cid[i][1] -= vals[i];
+            dif -= vals[i]; 
+        }
     }
   
     //check if total was enough, but bill variety was not enough
     if (dif > 0 ){
-      return {status: "INSUFFICIENT_FUNDS", change: []};
+        return {status: "INSUFFICIENT_FUNDS", change: []};
     } 
     
     //clear out the unneeded data (where amount=0)
     for (var coin= 0; coin < change.length; coin++) {
-      change[coin][1] /= 100; //convert back to dollars
-      if (change[coin][1] == 0) {
-        change.splice([coin],1);
-        coin-=1;
-      }
+        change[coin][1] /= 100; //convert back to dollars
+        if (change[coin][1] == 0) {
+            change.splice([coin],1);
+            coin-=1;
+        }
     }
     
     return {status: "OPEN", change: change.reverse()};
