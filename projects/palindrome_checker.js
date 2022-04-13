@@ -9,4 +9,4 @@ function palindrome(str) {
     let noSpace = str.toLowerCase().replace(/[\W_]/g, "");
     let revString = noSpace.split('').reverse().join('').toLowerCase();
     return revString === noSpace;
-  }
+}
