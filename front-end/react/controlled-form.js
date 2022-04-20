@@ -19,7 +19,7 @@ class MyForm extends React.Component {
     //update state.submit to the new input
     event.preventDefault() //You also must call event.preventDefault() in the submit handler, to prevent the default form submit behavior which will refresh the web page.
     this.setState( state=>({
-      submit: this.state.input
+      submit: this.state.input //while this *could* work, you may run into issues with async. better: state.input
     }))
   }
   render() {
