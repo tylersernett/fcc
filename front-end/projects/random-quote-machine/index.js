@@ -1,6 +1,6 @@
 function App() {
     const [quotes, setQuotes] = React.useState([]);
-    const [randomQuote, setRandomQuote] = React.useState([]);
+    const [randomQuote, setRandomQuote] = React.useState("");
 
     //useEffect args: callback function, array of dependencies
     React.useEffect(() => {
@@ -9,24 +9,43 @@ function App() {
             const data = await response.json();
 
             setQuotes(data);
-            let randomIndex = Math.floor(Math.random * data.length);
-            setRandomQuote(data[randomIndex]);
+            getNewQuote(data);
         }
         fetchData();
 
     }, [])
 
+    const getNewQuote = (arr) => {
+        let randomIndex = Math.floor(Math.random() * arr.length); //don't forget to add () to random()
+        setRandomQuote(arr[randomIndex]);
+    }
+
+
     return (
-        <div>Hello Worlds
-            {quotes.map(quote => (
-                <div>
-                    <div>"{quote.text}"</div>
-                    <div>-{quote.author}</div>
+        <div className="container pt-4">
+            <div className="jumbotron"><h4>Quote Machine</h4>
+
+                <div className="card">
+                    {randomQuote ? (
+                        // empty tags for JSX:
+                        <>
+                            <div className="card-header">"{randomQuote.text}"</div>
+                            <div className="card-body">-{randomQuote.author || "Anonymous"}</div>
+                        </>
+                    ) : <h2>Loading...</h2>}
+                    {/* if no arguments being passed, just do onClick={getNewQuote}
+                    but to pass arguments, call anon function (), as in onClick={ ()=> functionName(argumentName){} */}
+                    <button onClick={() => getNewQuote(quotes)} className="btn btn-outline-info">Randomize</button>
                 </div>
-            ))}
+
+            </div>
         </div>
     );
 }
 
 ReactDOM.render(<App />, document.getElementById('app'))
 // HTML doc needs an element with id='app'
+// import { createRoot } from 'react-dom/client';
+// const container = document.getElementById('app');
+// const root = createRoot(container); // createRoot(container!) if you use TypeScript
+// root.render(<App  />);
