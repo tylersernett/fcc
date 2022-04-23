@@ -9,37 +9,46 @@ function App() {
             const data = await response.json();
 
             setQuotes(data);
-            getNewQuote(data);
+            getRandomQuote(data);
         }
         fetchData();
 
     }, [])
 
-    const getNewQuote = (arr) => {
+    const getRandomQuote = (arr) => {
         let randomIndex = Math.floor(Math.random() * arr.length); //don't forget to add () to random()
         setRandomQuote(arr[randomIndex]);
     }
 
 
     return (
-        <div className="container pt-4">
-            <div className="jumbotron"><h4>Quote Machine</h4>
+        <div className="container pt-4 ">
+            
+            <div className="jumbotron " id="quote-box"><h4>Quote Machine</h4>
 
-                <div className="card">
+                <div className="card" >
+                    {/* if a random quote is loaded, display it. otherwise, display "loading..." */}
                     {randomQuote ? (
                         // empty tags for JSX:
                         <>
-                            <div className="card-header">"{randomQuote.text}"</div>
-                            <div className="card-body">-{randomQuote.author || "Anonymous"}</div>
+                            <div id="text" className="card-body">"{randomQuote.text}"</div>
+                            <div id="author" className="h-50 card-header text-right">-{randomQuote.author || "Anonymous"}</div>
                         </>
                     ) : <h2>Loading...</h2>}
                     {/* if no arguments being passed, just do onClick={getNewQuote}
                     but to pass arguments, call anon function (), as in onClick={ ()=> functionName(argumentName){} */}
-                    <button onClick={() => getNewQuote(quotes)} className="btn btn-outline-info">Randomize</button>
-                </div>
 
+                </div>
+                <div className=" pt-1 text-right">
+                    <button id="new-quote" onClick={() => getRandomQuote(quotes)} className="btn btn-info">Randomize</button>
+                    <a id="tweet-quote" target = "_blank" href={
+                        "https://twitter.com/intent/tweet?hashtags=quotes&text=" + encodeURIComponent('"' + randomQuote.text + '"') + encodeURIComponent(' -' + randomQuote.author)}>
+                        <button  className="btn btn-primary">Tweet
+                        </button>
+                    </a>
+                </div>
             </div>
-        </div>
+        </div >
     );
 }
 
