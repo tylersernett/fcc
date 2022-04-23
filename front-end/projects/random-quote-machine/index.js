@@ -41,8 +41,8 @@ function App() {
 
     return (
         <div className = "bag" style={{backgroundColor: color, minHeight:"100vh"}} >
-            <div className="container custom-container pt-5 "  style={{backgroundColor: color}}>
-                <div className="jumbotron custom-jumbo py-4" id="quote-box" ><h3>Random Quote Machine</h3>
+            <div className="container custom-container pt-5 "  >
+                <div className="jumbotron custom-jumbo py-4" id="quote-box" ><h3>Random Quote Machine <i class="lni lni-comments"></i></h3>
                     <div className="card" >
                         {/* if a random quote is loaded, display it. otherwise, display "loading..." */}
                         {randomQuote ?
@@ -65,7 +65,7 @@ function App() {
                         <button id="new-quote" onClick={() => getRandomQuote(quotes)} className="btn btn-dark m-1"  style={{backgroundColor: color}}>Randomize</button>
                         <a id="tweet-quote" target="_blank" href={
                             "https://twitter.com/intent/tweet?hashtags=quotes&text=" + encodeURIComponent('"' + randomQuote.text + '"') + encodeURIComponent(' -' + randomQuote.author)}>
-                            <button className="btn btn-dark"  style={{backgroundColor: color, color:"white"}}>Tweet
+                            <button className="btn btn-dark"  style={{backgroundColor: color, color:"white"}}><i class="lni lni-twitter-filled"></i> Tweet
                             </button>
                         </a>
                     </div>
