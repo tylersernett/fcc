@@ -62,10 +62,10 @@ function App() {
                     <div className=" pt-1 text-right">
                         {/* if no arguments being passed, just do onClick={getNewQuote}
                     but to pass arguments, call anon function (), as in onClick={ ()=> functionName(argumentName){} */}
-                        <button id="new-quote" onClick={() => getRandomQuote(quotes)} className="btn btn-dark m-1"  style={{backgroundColor: color}}>Randomize</button>
+                        <button id="new-quote" onClick={() => getRandomQuote(quotes)} className="btn btn-secondary m-1"  style={{backgroundColor: color}}>Randomize</button>
                         <a id="tweet-quote" target="_blank" href={
                             "https://twitter.com/intent/tweet?hashtags=quotes&text=" + encodeURIComponent('"' + randomQuote.text + '"') + encodeURIComponent(' -' + randomQuote.author)}>
-                            <button className="btn btn-dark"  style={{backgroundColor: color, color:"white"}}><i class="lni lni-twitter-filled"></i> Tweet
+                            <button className="btn btn-secondary"  style={{backgroundColor: color, color:"white"}}><i class="lni lni-twitter-filled"></i> Tweet
                             </button>
                         </a>
                     </div>
