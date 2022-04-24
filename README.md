@@ -1,1 +1,1 @@
-# fcc-js-algorithms
+# fcc
