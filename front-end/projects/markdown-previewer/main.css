@@ -23,3 +23,20 @@ pre,
 code {
     color: #FF1493;
 }
+
+pre {
+    background: #555;
+    white-space: pre-wrap;
+    /* ^fix wrapping/clipping issues */
+}
+
+blockquote{
+    background: #555;
+}
+
+a{
+    color: #61dbf8;
+}
+a:hover {
+    color: #FF1493;
+}

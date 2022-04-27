@@ -5,6 +5,8 @@ underscore (\_) _for italics_
 double asterisk (\*\*) **for bold**
 tilde (\~) ~~for strikethrough~~
 
+> angle bracket (\>) for blockquotes
+
 backticks ( \`\` ) \` for inline code\`
 three backticks for fenced codeblock:
 \`\`\` 
@@ -13,8 +15,6 @@ three backticks for fenced codeblock:
     value={text}
 </textarea>
 \`\`\`
-
-> angle bracket (\>) for blockquotes
 
 1. numerals with a period
 2. for an ordered list
