@@ -1,5 +1,5 @@
 body {
-    background-color: lightslategray;
+    background-color: #222;
 }
 
 textarea{
@@ -11,9 +11,12 @@ textarea{
 
 #preview {
     border: 1px solid black;   
-    background-color: lightgray;
+    background-color: #444;
+}
+#editor {
+    border: 1px solid black;  
 }
 
-pre {
-    color: teal;
+pre, code {
+    color: #FF1493;
 }

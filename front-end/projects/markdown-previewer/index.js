@@ -11,7 +11,6 @@ three backticks for fenced codeblock:
 <textarea
     id="editor"
     value={text}
-    onChange={(e) => setText(e.target.value)}>
 </textarea>
 \`\`\`
 
@@ -32,11 +31,11 @@ same format for images, but start the line with !
     const [text, setText] = React.useState(holderText);
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid text-white">
             <div className="text-center"><h1 className="display-4">Markdown Previewer</h1></div>
             <div className="row">
                 {/* editor  */}
-                <div className="col"><h2>Raw Editor</h2>
+                <div className="col"><p><span className="display-6"> Raw Editor </span><i class="fa-solid fa-pen-to-square"></i></p>
                     <textarea className = "px-1"
                         id="editor"
                         value={text}
@@ -46,7 +45,7 @@ same format for images, but start the line with !
                 </div>
 
                 {/* previewer */}
-                <div className="col"><h2>Preview</h2>
+                <div className="col"><p><span className="display-6">Output</span></p>
                     <div className = "px-2" id="preview" dangerouslySetInnerHTML={{ __html: marked.parse(text) }}>
                         {/* displaying {marked.parse(text)} in divs will output raw preformatted HTML -- 
                 we must set inner HTML instead to ensure the raw data actually gets formatted */}
