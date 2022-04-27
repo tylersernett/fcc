@@ -1,6 +1,6 @@
 function App() {
     const holderText = 
-`# format: hashes (#) for headers
+`# use # for headers
 underscore (\_) _for italics_
 double asterisk (\*\*) **for bold**
 tilde (\~) ~~for strikethrough~~
@@ -14,7 +14,7 @@ three backticks for fenced codeblock:
 </textarea>
 \`\`\`
 
-> angled bracket (\>) for blockquotes
+> angle bracket (\>) for blockquotes
 
 1. numerals with a period
 2. for an ordered list
@@ -28,15 +28,16 @@ same format for images, but start the line with !
 ![alt text]+(image URL in parentheses)
 ![react logo](./react-logo.png)`
 
+    // hooks:
     const [text, setText] = React.useState(holderText);
 
     return (
         <div className="container-fluid text-white">
-            <div className="text-center"><h1 className="display-4">Markdown Previewer</h1></div>
-            <div className="row">
-                {/* editor  */}
+            <div className="text-center topper"><h1 className="display-4">Markdown Previewer</h1></div>
+            <div className="row pb-3">
+                {/* =====editor=====  */}
                 <div className="col"><p><span className="display-6"> Raw Editor </span><i class="fa-solid fa-pen-to-square"></i></p>
-                    <textarea className = "px-1"
+                    <textarea className = "card px-1"
                         id="editor"
                         value={text}
                         onChange={(event) => setText(event.target.value)}>
@@ -44,9 +45,9 @@ same format for images, but start the line with !
                     </textarea>
                 </div>
 
-                {/* previewer */}
-                <div className="col"><p><span className="display-6">Output</span></p>
-                    <div className = "px-2" id="preview" dangerouslySetInnerHTML={{ __html: marked.parse(text) }}>
+                {/* =====previewer===== */}
+                <div className="col"><p><span className="display-6">Output:</span></p>
+                    <div className = "card px-2" id="preview" dangerouslySetInnerHTML={{ __html: marked.parse(text) }}>
                         {/* displaying {marked.parse(text)} in divs will output raw preformatted HTML -- 
                 we must set inner HTML instead to ensure the raw data actually gets formatted */}
                     </div>
