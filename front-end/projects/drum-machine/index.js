@@ -77,11 +77,11 @@ function App() {
     }
 
     return (
-        <div id="drum-machine">
-            <div id="display"><p>{lastKey}</p><br/>
+        <div id="drum-machine" className="container-fluid text-center text-white">
+            <div id="display" className="card mx-5" style={{backgroundColor:"#333"}}><p className="display-3">Drum Machine</p><p>{lastKey}</p><br/>
                 <div className="pad-grid">
                     {padArr.map((pad) => (
-                        <div className="drum-pad btn btn-primary"
+                        <div className="drum-pad btn btn-secondary m-1"
                             id={pad.keyCode}
                             onClick={() => playSound(pad.text)}>
                             {pad.text}
