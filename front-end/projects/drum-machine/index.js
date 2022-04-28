@@ -56,27 +56,40 @@ function App() {
         }
     ];
 
+    const [lastKey, setLastKey] = React.useState("-");
+
+    //side effect: each time a key is pressed, pass the key as the selector id to the playSound function
+    React.useEffect(() => {
+        document.addEventListener('keydown', (e) => {
+            playSound(e.key.toUpperCase())//event.key lowercase by default
+        })
+    }, []);
+
     //each audio sample is stored with an id of Q,W,E, etc.
     //This id gets passed into the function when a button is clicked--
     //we then locate the audio sample, and play it
     const playSound = (selector) => {
         const sample = document.getElementById(selector)
-        sample.play()
+        if (sample) { //add this check so unbound keypresses don't trigger anything
+            sample.play()
+            setLastKey(selector) //for display
+        }
     }
 
     return (
         <div id="drum-machine">
-            <div id="display" className="pad-grid">
-                {padArr.map((pad) => (
-                    <button className="drum-pad"
-                        id={pad.keyCode}
-                        onClick={() => playSound(pad.text)}>
-                        {pad.text}
-                        <audio className="clip" src={pad.src} id={pad.text}></audio>
-                    </button>
-                ))}
+            <div id="display"><p>{lastKey}</p><br/>
+                <div className="pad-grid">
+                    {padArr.map((pad) => (
+                        <div className="drum-pad btn btn-primary"
+                            id={pad.keyCode}
+                            onClick={() => playSound(pad.text)}>
+                            {pad.text}
+                            <audio className="clip" src={pad.src} id={pad.text}></audio>
+                        </div>
+                    ))}
+                </div>
             </div>
-
         </div>
     )
 }
