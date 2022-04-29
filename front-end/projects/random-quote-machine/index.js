@@ -27,8 +27,8 @@ function App() {
             '#FB6964',
             '#342224',
             '#472E32',
-            '#BDBB99',
-            '#77B1A9',
+            '#888321',
+            '#5241e6',
             '#73A857'];
         
         let randomIndex = Math.floor(Math.random() * arr.length); //don't forget to add () to random()
@@ -41,15 +41,16 @@ function App() {
 
     return (
         <div className = "bag" style={{backgroundColor: color, minHeight:"100vh"}} >
-            <div className="container custom-container pt-5 "  >
-                <div className="jumbotron custom-jumbo py-4" id="quote-box" ><h3>Random Quote Machine <i class="lni lni-comments"></i></h3>
-                    <div className="card" >
+            <div className="container custom-container pt-5 text-white"  >
+                <div className=" border-0 custom-jumbo py-4 text-center" id="quote-box" >
+                    <div className="card border-0" >
                         {/* if a random quote is loaded, display it. otherwise, display "loading..." */}
                         {randomQuote ?
                             // empty tags for JSX:
                             <>
-                                <div id="text" className="card-body" ><h4>"{randomQuote.text}"</h4></div>
-                                <div id="author" className="h-50 card-header text-right">– {randomQuote.author || "Anonymous"}</div>
+                                <div id="text" className="card-header opacity-75" style={{backgroundColor: color, color:"white"}}><h3>Random Quote Machine <i class="lni lni-comments"></i></h3></div>
+                                <div id="text" className="card-body text-black" ><h4>"{randomQuote.text}"</h4></div>
+                                <div id="author" className="card-footer  opacity-75" style={{backgroundColor: color, color:"white"}} ><h5>–{randomQuote.author || "Anonymous"}</h5></div>
                             </>
                             :
                             <div className="card-body text-center">
@@ -59,13 +60,13 @@ function App() {
                             </div>}
                     </div>
 
-                    <div className=" pt-1 text-right">
+                    <div className="pt-1">
                         {/* if no arguments being passed, just do onClick={getNewQuote}
                     but to pass arguments, call anon function (), as in onClick={ ()=> functionName(argumentName){} */}
-                        <button id="new-quote" onClick={() => getRandomQuote(quotes)} className="btn btn-secondary m-1"  style={{backgroundColor: color}}>Randomize</button>
+                        <button id="new-quote" onClick={() => getRandomQuote(quotes)} className="btn btn-white  m-1"  style={{backgroundColor: color, color:"white"}}>Randomize</button>
                         <a id="tweet-quote" target="_blank" href={
                             "https://twitter.com/intent/tweet?hashtags=quotes&text=" + encodeURIComponent('"' + randomQuote.text + '"') + encodeURIComponent(' -' + randomQuote.author)}>
-                            <button className="btn btn-secondary"  style={{backgroundColor: color, color:"white"}}><i class="lni lni-twitter-filled"></i> Tweet
+                            <button className="btn btn-white"  style={{backgroundColor: color, color:"white"}}><i class="lni lni-twitter-filled"></i> Tweet
                             </button>
                         </a>
                     </div>
@@ -78,8 +79,3 @@ function App() {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'))
-// HTML doc needs an element with id='app'
-// import { createRoot } from 'react-dom/client';
-// const container = document.getElementById('app');
-// const root = createRoot(container); // createRoot(container!) if you use TypeScript
-// root.render(<App  />);
