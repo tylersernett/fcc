@@ -18,22 +18,48 @@ function App() {
         const value = e.target.innerHTML;
         setCalc({
             ...calc,
-            num: (calc.num === 0)? value : calc.num+value
+            num: (calc.num === 0) ? value : calc.num + value//no leading 0s
         });
-        
-
     };
+
+    const equalsClickHandler = {};
+    //only calculate if there's an operand
+    
+    const decimalClickHandler = () => {
+        //prevent adding multiple decimals
+        !calc.num.toString().includes('.') ? 
+            setCalc({
+                ...calc,
+                num: (calc.num==0)? "0." : calc.num+"."//add leading 0 for proper fractions
+            })
+        : {}
+    };
+    
+    const negativeClickHandler = () => {
+        setCalc({
+            ...calc,
+            num: (calc.num *= -1)
+        });
+    };
+    
+    const operandClickHandler = {};
+
+    const clearClickHandler = () => {
+        
+    }
 
     return (
         <div>
             <div className="card calc-body">
-                <div id="display" className="text-center">{calc.num? calc.num : calc.result}</div>
+                <div id="display" className="text-center">{calc.num ? calc.num : calc.result}</div>
                 <div className="button-box">
                     {btns.map((item) =>
                         <div className="btn-primary text-center m-1"
                             id={item[1]}
                             key={item[1]}
-                            onClick={numberClickHandler}>
+                            onClick={(item[1] === "negative") ? negativeClickHandler :
+                            (item[1] === "decimal") ? decimalClickHandler : 
+                            (item[1] === "clear") ? decimalClickHandler :numberClickHandler}>
                             {item[0]}
                         </div>
                     )}
