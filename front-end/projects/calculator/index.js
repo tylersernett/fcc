@@ -23,41 +23,65 @@ function App() {
     };
 
     const equalsClickHandler = () => {
-        
+        switch (calc.operand) {
+            case "add":
+                setCalc({...calc, num: 0, operand: "", result: (Number(calc.result)+Number(calc.num)).toString() })
+                break;
+            case "subtract":
+                setCalc({...calc, num: 0, operand: "", result: (Number(calc.result)-Number(calc.num)).toString() })
+                break;
+            case "multiply":
+                setCalc({...calc, num: 0, operand: "", result: (Number(calc.result)*Number(calc.num)).toString() })
+                break;
+            case "divide":
+                setCalc({...calc, num: 0, operand: "", result: (calc.num =="0")?"Cannot divide by 0" : (Number(calc.result)/Number(calc.num)).toString() })
+                break;
+            default:
+                break;
+        }
+
+
     };
-    //only calculate if there's an operand
-    
+
     const decimalClickHandler = () => {
         //prevent adding multiple decimals
-        !calc.num.toString().includes('.') ? 
+        !calc.num.toString().includes('.') ?
             setCalc({
                 ...calc,
-                num: (calc.num==0)? "0." : calc.num+"."//add leading 0 for proper fractions
+                num: (calc.num == 0) ? "0." : calc.num + "."//add leading 0 for proper fractions
             })
-        : {}
+            : {}
     };
-    
+
     const negativeClickHandler = () => {
         setCalc({
             ...calc,
             num: (calc.num *= -1)
         });
+        console.log(calc)
     };
-    
-    //load opearnd into state
+
+    //load operand into state
     const operandClickHandler = (e) => {
         e.preventDefault();
         const op = e.target.id;
+
+        //if there's num & result, perform old operation
+
         setCalc({
             ...calc,
-            operand: op
+            operand: op,
+            //if there's a result & no new number, re-use old result for operand chains
+            result: (calc.result && !calc.num)? calc.result : calc.num,
+            num: 0
         });
     }
 
     const clearClickHandler = () => {
         setCalc({
-            ...calc,
-            num: 0
+            num: 0,
+            operand: "",
+            result: 0
         });
     }
 
@@ -71,10 +95,10 @@ function App() {
                             id={item[1]}
                             key={item[1]}
                             onClick={(item[1] === "negative") ? negativeClickHandler :
-                            (item[1] === "decimal") ? decimalClickHandler : 
-                            (item[1] === "clear") ? clearClickHandler :
-                            (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide" ) ? operandClickHandler : 
-                            (item[1] === "equals") ? equalsClickHandler :numberClickHandler}>
+                                (item[1] === "decimal") ? decimalClickHandler :
+                                    (item[1] === "clear") ? clearClickHandler :
+                                        (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide") ? operandClickHandler :
+                                            (item[1] === "equals") ? equalsClickHandler : numberClickHandler}>
                             {item[0]}
                         </div>
                     )}
