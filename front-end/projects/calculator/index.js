@@ -12,29 +12,42 @@ function App() {
         result: 0
     });
 
+    React.useEffect(() => {
+        console.log(calc);
+    })
+
     const numberClickHandler = (e) => {
         e.preventDefault(); //prevent refresh
 
         const value = e.target.innerHTML;
-        setCalc({
-            ...calc,
-            num: (calc.num == 0) ? value : calc.num + value//no leading 0s
-        });
+
+        //if there's an old operand that hasn't been handled!!!
+
+        //expression 3 + 5 * 6 - 2 / 4 should produce 32.5 or 11.5 as an
+        //answer, depending on the logic your calculator uses
+        //(formula vs. immediate execution) 
+        if (!(calc.num === 0 && value == 0)) {
+            setCalc({
+                ...calc,
+                num: (calc.num === 0) ? value : calc.num + value,//no leading 0s -- needs ===, as 0. == 0
+                //result: (calc.operand)? calc.result : 0//!!!!!fix -- needs equals trigger
+            });
+        }
     };
 
-    const equalsClickHandler = () => {
+    const equalsClickHandler = (op="") => {
         switch (calc.operand) {
             case "add":
-                setCalc({...calc, num: 0, operand: "", result: (Number(calc.result)+Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: op, result: (Number(calc.result) + Number(calc.num)).toString() })
                 break;
             case "subtract":
-                setCalc({...calc, num: 0, operand: "", result: (Number(calc.result)-Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: op, result: (Number(calc.result) - Number(calc.num)).toString() })
                 break;
             case "multiply":
-                setCalc({...calc, num: 0, operand: "", result: (Number(calc.result)*Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: op, result: (Number(calc.result) * Number(calc.num)).toString() })
                 break;
             case "divide":
-                setCalc({...calc, num: 0, operand: "", result: (calc.num =="0")?"Cannot divide by 0" : (Number(calc.result)/Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: op, result: (calc.num == "0") ? "Cannot divide by 0" : (Number(calc.result) / Number(calc.num)).toString() })
                 break;
             default:
                 break;
@@ -45,12 +58,12 @@ function App() {
 
     const decimalClickHandler = () => {
         //prevent adding multiple decimals
-        !calc.num.toString().includes('.') ?
+        if (!calc.num.toString().includes('.')) {
             setCalc({
                 ...calc,
                 num: (calc.num == 0) ? "0." : calc.num + "."//add leading 0 for proper fractions
             })
-            : {}
+        }
     };
 
     const negativeClickHandler = () => {
@@ -66,15 +79,18 @@ function App() {
         e.preventDefault();
         const op = e.target.id;
 
-        //if there's num & result, perform old operation
-
-        setCalc({
-            ...calc,
-            operand: op,
-            //if there's a result & no new number, re-use old result for operand chains
-            result: (calc.result && !calc.num)? calc.result : calc.num,
-            num: 0
-        });
+        
+        if (calc.num && calc.result) {
+            equalsClickHandler(op);//treat operand input as equals when it's a operand-to-operand chain input
+        } else {
+            setCalc({
+                ...calc,
+                operand: op,
+                //if there's a result & no new number, re-use old result for equals-to-operand chain input
+                result: (calc.result && !calc.num) ? calc.result : calc.num,
+                num: 0
+            });
+        }
     }
 
     const clearClickHandler = () => {
