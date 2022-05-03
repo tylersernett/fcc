@@ -18,11 +18,13 @@ function App() {
         const value = e.target.innerHTML;
         setCalc({
             ...calc,
-            num: (calc.num === 0) ? value : calc.num + value//no leading 0s
+            num: (calc.num == 0) ? value : calc.num + value//no leading 0s
         });
     };
 
-    const equalsClickHandler = {};
+    const equalsClickHandler = () => {
+        
+    };
     //only calculate if there's an operand
     
     const decimalClickHandler = () => {
@@ -42,10 +44,21 @@ function App() {
         });
     };
     
-    const operandClickHandler = {};
+    //load opearnd into state
+    const operandClickHandler = (e) => {
+        e.preventDefault();
+        const op = e.target.id;
+        setCalc({
+            ...calc,
+            operand: op
+        });
+    }
 
     const clearClickHandler = () => {
-        
+        setCalc({
+            ...calc,
+            num: 0
+        });
     }
 
     return (
@@ -59,7 +72,9 @@ function App() {
                             key={item[1]}
                             onClick={(item[1] === "negative") ? negativeClickHandler :
                             (item[1] === "decimal") ? decimalClickHandler : 
-                            (item[1] === "clear") ? decimalClickHandler :numberClickHandler}>
+                            (item[1] === "clear") ? clearClickHandler :
+                            (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide" ) ? operandClickHandler : 
+                            (item[1] === "equals") ? equalsClickHandler :numberClickHandler}>
                             {item[0]}
                         </div>
                     )}
