@@ -57,11 +57,18 @@ function App() {
     };
 
     const negativeClickHandler = () => {
-        setCalc({
-            ...calc,
-            num: (calc.num *= -1)
-        });
-    };
+        if (calc.num === 0 && calc.result !== 0) {
+            setCalc({
+                ...calc,
+                result: (calc.result * -1)
+            });
+        } else {
+            setCalc({
+                ...calc,
+                num: (calc.num * -1)
+            });
+        };
+    }
 
     const operandClickHandler = (e) => {
         const op = e.target.id;
@@ -88,12 +95,12 @@ function App() {
     }
 
     return (
-        <div>
-            <div className="card calc-body">
-                <div id="display" className="text-end">{calc.num ? calc.num : calc.result}</div>
+        <div className="container">
+            <div className="calc-body mt-3">
+                <div id="display" className="text-end fs-3 m-1">{calc.num ? calc.num : calc.result}</div>
                 <div className="button-box">
                     {btns.map((item) =>
-                        <div className="btn-primary text-center m-1"
+                        <div className="btn-primary text-center fs-2 m-1"
                             id={item[1]}
                             key={item[1]}
                             onClick={(item[1] === "negative") ? negativeClickHandler :
@@ -101,7 +108,7 @@ function App() {
                                     (item[1] === "clear") ? clearClickHandler :
                                         (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide") ? operandClickHandler :
                                             (item[1] === "equals") ? () => equalsClickHandler() : numberClickHandler}>
-                                                {/* anonymous arrow function needed on equals Handler because it has a default parameter */}
+                            {/* anonymous arrow function needed on equals Handler because it has a default parameter */}
                             {item[0]}
                         </div>
                     )}
@@ -111,3 +118,6 @@ function App() {
     )
 }
 ReactDOM.render(<App />, document.getElementById('app'))
+
+//individual button divs instead of map?? change button colors
+//redo equalsClickHandle switch statement for less redundancy
