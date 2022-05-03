@@ -1,8 +1,8 @@
 function App() {
     // {display, id}
     const btns = [[7, "seven"], [8, "eight"], [9, "nine"], ["/", "divide"],
-    [6, "six"], [5, "five"], [4, "four"], ["x", "multiply"],
-    [3, "three"], [2, "two"], [1, "one"], ["-", "subtract"],
+    [4, "four"], [5, "five"], [6, "six"],  ["x", "multiply"],
+    [1, "one"], [2, "two"], [3, "three"],  ["-", "subtract"],
     ["±", "negative"], [0, "zero"], [".", "decimal"], ["+", "add"],
     ["c", "clear"], ["=", "equals"]];
 
@@ -97,10 +97,10 @@ function App() {
     return (
         <div className="container">
             <div className="calc-body mt-3">
-                <div id="display" className="text-end fs-3 m-1">{calc.num ? calc.num : calc.result}</div>
-                <div className="button-box">
+                <div id="display" className="text-end fs-3 m-2 px-1">{calc.num ? calc.num : calc.result}</div>
+                <div className="button-box m-1">
                     {btns.map((item) =>
-                        <div className="btn-primary text-center fs-2 m-1"
+                        <div className="btn-primary text-center fs-2 border-0 m-1"
                             id={item[1]}
                             key={item[1]}
                             onClick={(item[1] === "negative") ? negativeClickHandler :
