@@ -10,14 +10,31 @@ function App() {
         num: 0,
         operand: "",
         result: 0
-    })
+    });
+
+    const numberClickHandler = (e) => {
+        e.preventDefault(); //prevent refresh
+
+        const value = e.target.innerHTML;
+        setCalc({
+            ...calc,
+            num: (calc.num === 0)? value : calc.num+value
+        });
+        
+
+    };
+
     return (
         <div>
-            <div className="calc-body">
-                <div id="display" className="card text-right">{calc.result}</div>
+            <div className="card calc-body">
+                <div id="display" className="text-center">{calc.num? calc.num : calc.result}</div>
                 <div className="button-box">
                     {btns.map((item) =>
-                        <div className="btn-primary text-center m-1" id={item[1]}>{item[0]}
+                        <div className="btn-primary text-center m-1"
+                            id={item[1]}
+                            key={item[1]}
+                            onClick={numberClickHandler}>
+                            {item[0]}
                         </div>
                     )}
                 </div>
