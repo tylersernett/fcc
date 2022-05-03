@@ -17,43 +17,33 @@ function App() {
     })
 
     const numberClickHandler = (e) => {
-        e.preventDefault(); //prevent refresh
-
         const value = e.target.innerHTML;
-
-        //if there's an old operand that hasn't been handled!!!
-
-        //expression 3 + 5 * 6 - 2 / 4 should produce 32.5 or 11.5 as an
-        //answer, depending on the logic your calculator uses
-        //(formula vs. immediate execution) 
-        if (!(calc.num === 0 && value == 0)) {
+        if (!(calc.num === 0 && value == 0)) { //no leading 0s
             setCalc({
                 ...calc,
-                num: (calc.num === 0) ? value : calc.num + value,//no leading 0s -- needs ===, as 0. == 0
-                //result: (calc.operand)? calc.result : 0//!!!!!fix -- needs equals trigger
+                num: (calc.num === 0) ? value : calc.num + value,//needs ===, as 0. == 0
+                result: (!calc.operand) ? 0 : calc.result //reset result to 0 when clicking a # after equalsHandling
             });
         }
     };
 
-    const equalsClickHandler = (op="") => {
+    const equalsClickHandler = (opr = "") => {
         switch (calc.operand) {
             case "add":
-                setCalc({ ...calc, num: 0, operand: op, result: (Number(calc.result) + Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: opr, result: (Number(calc.result) + Number(calc.num)).toString() })
                 break;
             case "subtract":
-                setCalc({ ...calc, num: 0, operand: op, result: (Number(calc.result) - Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: opr, result: (Number(calc.result) - Number(calc.num)).toString() })
                 break;
             case "multiply":
-                setCalc({ ...calc, num: 0, operand: op, result: (Number(calc.result) * Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: opr, result: (Number(calc.result) * Number(calc.num)).toString() })
                 break;
             case "divide":
-                setCalc({ ...calc, num: 0, operand: op, result: (calc.num == "0") ? "Cannot divide by 0" : (Number(calc.result) / Number(calc.num)).toString() })
+                setCalc({ ...calc, num: 0, operand: opr, result: (calc.num == "0") ? "Cannot divide by 0" : (Number(calc.result) / Number(calc.num)).toString() })
                 break;
             default:
                 break;
         }
-
-
     };
 
     const decimalClickHandler = () => {
@@ -71,15 +61,11 @@ function App() {
             ...calc,
             num: (calc.num *= -1)
         });
-        console.log(calc)
     };
 
-    //load operand into state
     const operandClickHandler = (e) => {
-        e.preventDefault();
         const op = e.target.id;
 
-        
         if (calc.num && calc.result) {
             equalsClickHandler(op);//treat operand input as equals when it's a operand-to-operand chain input
         } else {
@@ -104,7 +90,7 @@ function App() {
     return (
         <div>
             <div className="card calc-body">
-                <div id="display" className="text-center">{calc.num ? calc.num : calc.result}</div>
+                <div id="display" className="text-end">{calc.num ? calc.num : calc.result}</div>
                 <div className="button-box">
                     {btns.map((item) =>
                         <div className="btn-primary text-center m-1"
@@ -114,7 +100,8 @@ function App() {
                                 (item[1] === "decimal") ? decimalClickHandler :
                                     (item[1] === "clear") ? clearClickHandler :
                                         (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide") ? operandClickHandler :
-                                            (item[1] === "equals") ? equalsClickHandler : numberClickHandler}>
+                                            (item[1] === "equals") ? () => equalsClickHandler() : numberClickHandler}>
+                                                {/* anonymous arrow function needed on equals Handler because it has a default parameter */}
                             {item[0]}
                         </div>
                     )}
