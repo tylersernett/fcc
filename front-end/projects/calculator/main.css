@@ -16,12 +16,16 @@
     background-color: #eee;
 }
 
-#clear {
+.rounded {
+    border-radius: 5px;
+}
+
+#clear, #clear-entry {
     background-color: red;
 }
 
-#clear:hover{
-    background-color:rgb(221, 0, 0)
+#clear:hover, #clear-entry:hover{
+    background-color:rgb(207, 0, 0)
 }
 
 #multiply, #divide, #add, #subtract{
