@@ -72,8 +72,8 @@ function App() {
         };
     }
 
-    const operandClickHandler = (e) => {
-        const op = e.target.id;
+    const operandClickHandler = (op) => {
+        //const op = e.target.id;
 
         if (calc.num && calc.result) {
             equalsClickHandler(op);//treat operand input as equals when it's a operand-to-operand chain input
@@ -104,83 +104,48 @@ function App() {
         });
     }
 
-    
-        // const callbackRef = React.useRef(cb);
-        
-        // React.useEffect(() => {
-        //     callbackRef.current = cb;
-        //     // console.log( callbackRef.current)
-
-        // })
-
-        React.useEffect(() => {
-            function handleKeydown(e) {
-                // if (e.key === key){
-                //     callbackRef.current(e)
-                // }
-                const key = e.key
-                switch (key) {
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                    case '0':
-                        numberClickHandler(key);
-                        break;
-                    case 'Enter':
-                        equalsClickHandler();
-                        break;
-                    case '.':
-                        decimalClickHandler();
-                        break;
-                    // case '+':
-                    //     operandClickHandler();
-                    //     break;
-                    default:
-                }
+    React.useEffect(() => {
+        function handleKeydown(e) {
+            const key = e.key
+            switch (key) {
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '0':
+                    numberClickHandler(key);
+                    break;
+                case 'Enter':
+                    equalsClickHandler();
+                    break;
+                case '.':
+                    decimalClickHandler();
+                    break;
+                case '+':
+                    operandClickHandler("add");
+                    break;
+                case '-':
+                    operandClickHandler("subtract");
+                    break;
+                case '/':
+                    operandClickHandler("divide");
+                    break;
+                case '*':
+                    operandClickHandler("multiply");
+                    break;
+                default:
             }
+        }
 
-            document.addEventListener("keydown", handleKeydown)
-            return () => document.removeEventListener("keydown", handleKeydown)
-        }, [numberClickHandler]);
-
-
-    //useKey("Enter")
-    // const handleEnter = () => {
-    //     console.log("pressed enter")
-    // }
-    
-    // React.useEffect(() => {
-    //     document.addEventListener('keydown', keyPress, (e) => {
-    //         e.preventDefault();
-    //         //console.log('typed ' + e.key)
-    //         const key = e.key
-    //         switch (key) {
-    //             case '1':
-    //             case '2':
-    //             case '3':
-    //             case '4':
-    //             case '5':
-    //             case '6':
-    //             case '7':
-    //             case '8':
-    //             case '9':
-    //             case '0':
-    //                 numberClickHandler(key);
-    //                 break;
-    //             default:
-
-    //         }
-    //     })
-    //     return () => document.removeEventListener('keydown', keyPress)
-    // }, [numberClickHandler]); //add to dependency array or else it you'll just get single value inputs 1, 1, 1, etc vs 111
-
-
+        document.addEventListener("keydown", handleKeydown)
+        return () => document.removeEventListener("keydown", handleKeydown)
+        //remove eventListener, or you get weird repeating states for keyboard entry
+    }, [numberClickHandler]);//use dependency, or you only get 1 number in display at a time for keyboard entry
 
     return (
         <div className="container">
@@ -195,7 +160,7 @@ function App() {
                                 (item[1] === "decimal") ? decimalClickHandler :
                                     (item[1] === "clear") ? clearClickHandler :
                                         (item[1] === "clear-entry") ? clearEntryClickHandler :
-                                            (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide") ? operandClickHandler :
+                                            (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide") ? () => operandClickHandler(item[1]) :
                                                 (item[1] === "equals") ? () => equalsClickHandler() : () => numberClickHandler(item[0])}>
                             {/* anonymous arrow function needed on equals Handler because it has a default parameter */}
                             {item[0]}
@@ -211,3 +176,5 @@ ReactDOM.render(<App />, document.getElementById('app'))
 //add sqrt button
 //redo equalsClickHandle switch statement for less redundancy
 //add keypress listener
+//how does GRE calc handle -? as negative, or always subtract?
+//and backspace delete for clear/ CE??
