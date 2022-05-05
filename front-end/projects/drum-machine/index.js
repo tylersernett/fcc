@@ -71,6 +71,7 @@ function App() {
     const playSound = (selector) => {
         const sample = document.getElementById(selector)
         if (sample) { //add this check so unbound keypresses don't trigger anything
+            sample.currentTime = 0; //allows for re-trigger
             sample.play()
             setLastKey(selector) //for display
         }
