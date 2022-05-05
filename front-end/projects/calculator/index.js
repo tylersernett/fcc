@@ -1,10 +1,10 @@
 function App() {
     // {display, id}
-    const btns = [[7, "seven"], [8, "eight"], [9, "nine"], ["/", "divide"],
-    [4, "four"], [5, "five"], [6, "six"],  ["x", "multiply"],
-    [1, "one"], [2, "two"], [3, "three"],  ["-", "subtract"],
+    const btns = [[7, "seven"], [8, "eight"], [9, "nine"], ["÷", "divide"],
+    [4, "four"], [5, "five"], [6, "six"], ["×", "multiply"],
+    [1, "one"], [2, "two"], [3, "three"], ["–", "subtract"],
     ["±", "negative"], [0, "zero"], [".", "decimal"], ["+", "add"],
-    ["C", "clear"], ["CE", "clear-entry"],  ["=", "equals"]];
+    ["C", "clear"], ["CE", "clear-entry"], ["=", "equals"]];
 
     const [calc, setCalc] = React.useState({
         num: 0,
@@ -16,8 +16,10 @@ function App() {
         console.log(calc);
     })
 
-    const numberClickHandler = (e) => {
-        const value = e.target.innerHTML;
+    const numberClickHandler = (num) => {
+        //const value = e.target.innerHTML;
+        const value = num.toString();
+        //console.log('numhandle' + value)
         if (!(calc.num === 0 && value == 0)) { //no leading 0s
             setCalc({
                 ...calc,
@@ -96,14 +98,93 @@ function App() {
 
     //only clear most recent entry
     const clearEntryClickHandler = () => {
-        setCalc({...calc,
+        setCalc({
+            ...calc,
             num: 0,
         });
     }
 
+    
+        // const callbackRef = React.useRef(cb);
+        
+        // React.useEffect(() => {
+        //     callbackRef.current = cb;
+        //     // console.log( callbackRef.current)
+
+        // })
+
+        React.useEffect(() => {
+            function handleKeydown(e) {
+                // if (e.key === key){
+                //     callbackRef.current(e)
+                // }
+                const key = e.key
+                switch (key) {
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case '0':
+                        numberClickHandler(key);
+                        break;
+                    case 'Enter':
+                        equalsClickHandler();
+                        break;
+                    case '.':
+                        decimalClickHandler();
+                        break;
+                    // case '+':
+                    //     operandClickHandler();
+                    //     break;
+                    default:
+                }
+            }
+
+            document.addEventListener("keydown", handleKeydown)
+            return () => document.removeEventListener("keydown", handleKeydown)
+        }, [numberClickHandler]);
+
+
+    //useKey("Enter")
+    // const handleEnter = () => {
+    //     console.log("pressed enter")
+    // }
+    
+    // React.useEffect(() => {
+    //     document.addEventListener('keydown', keyPress, (e) => {
+    //         e.preventDefault();
+    //         //console.log('typed ' + e.key)
+    //         const key = e.key
+    //         switch (key) {
+    //             case '1':
+    //             case '2':
+    //             case '3':
+    //             case '4':
+    //             case '5':
+    //             case '6':
+    //             case '7':
+    //             case '8':
+    //             case '9':
+    //             case '0':
+    //                 numberClickHandler(key);
+    //                 break;
+    //             default:
+
+    //         }
+    //     })
+    //     return () => document.removeEventListener('keydown', keyPress)
+    // }, [numberClickHandler]); //add to dependency array or else it you'll just get single value inputs 1, 1, 1, etc vs 111
+
+
+
     return (
         <div className="container">
-            <div className="calc-body mt-3">
+            <div className="calc-body mt-3" >
                 <div id="display" className="text-end fs-3 mx-2 mt-2 px-1">{calc.num ? calc.num : calc.result}</div>
                 <div className="button-box m-1">
                     {btns.map((item) =>
@@ -113,9 +194,9 @@ function App() {
                             onClick={(item[1] === "negative") ? negativeClickHandler :
                                 (item[1] === "decimal") ? decimalClickHandler :
                                     (item[1] === "clear") ? clearClickHandler :
-                                    (item[1] === "clear-entry") ? clearEntryClickHandler :
-                                        (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide") ? operandClickHandler :
-                                            (item[1] === "equals") ? () => equalsClickHandler() : numberClickHandler}>
+                                        (item[1] === "clear-entry") ? clearEntryClickHandler :
+                                            (item[1] === "add" || item[1] === "subtract" || item[1] === "multiply" || item[1] === "divide") ? operandClickHandler :
+                                                (item[1] === "equals") ? () => equalsClickHandler() : () => numberClickHandler(item[0])}>
                             {/* anonymous arrow function needed on equals Handler because it has a default parameter */}
                             {item[0]}
                         </div>
@@ -127,5 +208,6 @@ function App() {
 }
 ReactDOM.render(<App />, document.getElementById('app'))
 
-//individual button divs instead of map?? change button colors
+//add sqrt button
 //redo equalsClickHandle switch statement for less redundancy
+//add keypress listener
