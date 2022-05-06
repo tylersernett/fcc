@@ -16,8 +16,9 @@
     background-color: #eee;
 }
 
-.rounded {
-    border-radius: 5px;
+.calc-btn {
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 #clear, #clear-entry {

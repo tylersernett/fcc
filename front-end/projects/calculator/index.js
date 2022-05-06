@@ -17,9 +17,7 @@ function App() {
     })
 
     const numberClickHandler = (num) => {
-        //const value = e.target.innerHTML;
         const value = num.toString();
-        //console.log('numhandle' + value)
         if (!(calc.num === 0 && value == 0)) { //no leading 0s
             setCalc({
                 ...calc,
@@ -73,10 +71,8 @@ function App() {
     }
 
     const operandClickHandler = (op) => {
-        //const op = e.target.id;
-
         if (calc.num && calc.result) {
-            equalsClickHandler(op);//treat operand input as equals when it's a operand-to-operand chain input
+            equalsClickHandler(op);//treat operand input as equals when it's a operand-to-operand (no equals) chain input
         } else {
             setCalc({
                 ...calc,
@@ -108,16 +104,7 @@ function App() {
         function handleKeydown(e) {
             const key = e.key
             switch (key) {
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                case '0':
+                case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case '0':
                     numberClickHandler(key);
                     break;
                 case 'Enter':
@@ -143,9 +130,9 @@ function App() {
         }
 
         document.addEventListener("keydown", handleKeydown)
-        return () => document.removeEventListener("keydown", handleKeydown)
         //remove eventListener, or you get weird repeating states for keyboard entry
-    }, [numberClickHandler]);//use dependency, or you only get 1 number in display at a time for keyboard entry
+        return () => document.removeEventListener("keydown", handleKeydown)
+    }, [numberClickHandler]); //use dependency, or you only get 1 number in display at a time for keyboard entry
 
     return (
         <div className="container">
@@ -153,7 +140,7 @@ function App() {
                 <div id="display" className="text-end fs-3 mx-2 mt-2 px-1">{calc.num ? calc.num : calc.result}</div>
                 <div className="button-box m-1">
                     {btns.map((item) =>
-                        <div className="rounded btn-primary text-center fs-2 border-0 m-1"
+                        <div className="calc-btn btn-primary text-center fs-2 border-0 m-1"
                             id={item[1]}
                             key={item[1]}
                             onClick={(item[1] === "negative") ? negativeClickHandler :
