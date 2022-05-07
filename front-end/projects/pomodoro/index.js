@@ -1,11 +1,16 @@
 function App() {
-    const defaultBreak = 5
-    const defaultSession = 25
+    const defaultBreak = 5;
+    const defaultSession = 25;
     
     const [breakLength, setBreakLength] = React.useState(defaultBreak);
     const [sessionLength, setSessionLength] = React.useState(defaultSession);
     const [timeLeft, setTimeLeft] = React.useState(sessionLength * 60);
-    const [timerOn, setTimerOn] = React.useState(false)
+    const [timerOn, setTimerOn] = React.useState(false);
+    const [onBreak, setOnBreak] = React.useState(false);
+
+    React.useEffect(() => {
+        console.table(breakLength, sessionLength, timeLeft, timerOn, onBreak);
+    })
 
     const formatTime = (time) => {
         let min = Math.floor(time / 60);
@@ -24,7 +29,8 @@ function App() {
         )
         if (func === setSessionLength) {
             if (!timerOn) {
-                setTimeLeft( (prev) => ((prev + amount >= 1*60) && (prev+amount <=60*60)) ? prev + amount*60 : prev)
+                setTimeLeft( (prev) => ((prev + amount >= 1*60) && (prev+amount <60*60)) ? (sessionLength + amount)*60 : prev);
+                //minor bug: possible to get timeLeft to 61
             }
         }
     }
@@ -36,6 +42,31 @@ function App() {
         setTimeLeft(defaultSession*60);
     }
 
+    const controlTime = () => {
+        let second = 1000;
+        let date = new Date().getTime();
+        let nextDate = date + second;
+        let onBreakVariable = onBreak;
+
+        //on first activation, create new interval
+        if (!timerOn) {
+            let interval = setInterval( () => {
+                date = new Date().getTime();
+                if(date > nextDate) {
+                    setTimeLeft(prev => prev-1)
+                    nextDate += second;
+                }
+            }, 100);
+
+            //store ID for pausing purposes
+            localStorage.clear();
+            localStorage.setItem('int-id', interval);
+        } else {
+            clearInterval(localStorage.getItem('int-id'));
+        }
+        setTimerOn(prev => !prev);
+    }
+//"https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
     return (
         <div id="container" >
             <div id='break-label'><h4 className="display-6">Break Length</h4>
@@ -47,7 +78,7 @@ function App() {
             <div id='timer-label'><h4 className="display-5">Timer:</h4>
                 <span id="time-left">{formatTime(timeLeft)}</span>
                 <br />
-                <button id="start_stop"><i className="fa-solid fa-play"></i><i className="fa-solid fa-pause"></i></button>
+                <button id="start_stop" onClick={controlTime}>{!timerOn?<i className="fa-solid fa-play"></i>:<i className="fa-solid fa-pause"></i>}</button>
                 <button id="reset" onClick={resetLengths}><i className="fa-solid fa-rotate-left"></i></button>
             </div>
 
