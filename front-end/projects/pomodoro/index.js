@@ -1,6 +1,6 @@
 function App() {
     const defaultBreak = 5;
-    const defaultSession = 25;
+    const defaultSession = 58;
     
     const [breakLength, setBreakLength] = React.useState(defaultBreak);
     const [sessionLength, setSessionLength] = React.useState(defaultSession);
@@ -24,15 +24,18 @@ function App() {
 
     //change break & session times, but stay between 1 & 60 inclusive
     const changeLength = (func, amount) => {
-        func( (prev) => 
-            ((prev + amount >= 1) && (prev+amount <=60)) ? prev + amount : prev
-        )
-        if (func === setSessionLength) {
-            if (!timerOn) {
-                setTimeLeft( (prev) => ((prev + amount >= 1*60) && (prev+amount <60*60)) ? (sessionLength + amount)*60 : prev);
-                //minor bug: possible to get timeLeft to 61
+        func( (prev) => {
+            if ((prev + amount >= 1) && (prev+amount <=60)) {
+                if (func === setSessionLength) {
+                    if (!timerOn) {
+                        setTimeLeft( (prev) => ((prev + amount >= 1*60) && (prev+amount <60*60)) ? (sessionLength + amount)*60 : prev);
+                    }
+                }
+                return prev+amount
+            } else {
+                return prev
             }
-        }
+        })
     }
 
     //reset everything to defaults
@@ -46,14 +49,19 @@ function App() {
         let second = 1000;
         let date = new Date().getTime();
         let nextDate = date + second;
-        let onBreakVariable = onBreak;
+        //let onBreakVariable = onBreak;
 
         //on first activation, create new interval
         if (!timerOn) {
             let interval = setInterval( () => {
                 date = new Date().getTime();
                 if(date > nextDate) {
-                    setTimeLeft(prev => prev-1)
+                    setTimeLeft( (prev) => {
+                        if (prev <=0 && !onBreak) {
+                            
+                        }
+                        return prev-1;
+                    })
                     nextDate += second;
                 }
             }, 100);
@@ -75,7 +83,7 @@ function App() {
             <div id='session-label'><h4 className="display-6">Session Length</h4>
                 <button id="session-decrement" onClick={() => changeLength(setSessionLength, -1)}>–</button><span id="session-length">{sessionLength}</span><button id="session-increment" onClick={() => changeLength(setSessionLength, 1)}>+</button>
             </div>
-            <div id='timer-label'><h4 className="display-5">Timer:</h4>
+            <div id='timer-label'><h4 className="display-5">{onBreak? 'Break Timer:' : 'Session Timer:'}</h4>
                 <span id="time-left">{formatTime(timeLeft)}</span>
                 <br />
                 <button id="start_stop" onClick={controlTime}>{!timerOn?<i className="fa-solid fa-play"></i>:<i className="fa-solid fa-pause"></i>}</button>
