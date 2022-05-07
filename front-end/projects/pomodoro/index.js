@@ -5,6 +5,7 @@ function App() {
     const [breakLength, setBreakLength] = React.useState(defaultBreak);
     const [sessionLength, setSessionLength] = React.useState(defaultSession);
     const [timeLeft, setTimeLeft] = React.useState(sessionLength * 60);
+    const [timerOn, setTimerOn] = React.useState(false)
 
     const formatTime = (time) => {
         let min = Math.floor(time / 60);
@@ -21,6 +22,11 @@ function App() {
         func( (prev) => 
             ((prev + amount >= 1) && (prev+amount <=60)) ? prev + amount : prev
         )
+        if (func === setSessionLength) {
+            if (!timerOn) {
+                setTimeLeft( (prev) => ((prev + amount >= 1*60) && (prev+amount <=60*60)) ? prev + amount*60 : prev)
+            }
+        }
     }
 
     //reset everything to defaults
