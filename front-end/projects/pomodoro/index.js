@@ -1,15 +1,16 @@
 function App() {
-    const defaultBreak = 5;
-    const defaultSession = 25;
+    const defaultBreak = .05;
+    const defaultSession = .1//25;
 
     const [breakLength, setBreakLength] = React.useState(defaultBreak);
     const [sessionLength, setSessionLength] = React.useState(defaultSession);
     const [timeLeft, setTimeLeft] = React.useState(sessionLength * 60);
     const [timerOn, setTimerOn] = React.useState(false);
-    const [onBreak, setOnBreak] = React.useState(false);
+    //const [onBreak, setOnBreak] = React.useState(false);
+    const breakRef = React.useRef(false); //prefer Ref rather than State here-- Ref does not render at each value change. And we can set it without calling a 'set'
 
     React.useEffect(() => {
-        console.table(breakLength, sessionLength, timeLeft, timerOn, onBreak);
+        console.table(breakLength, sessionLength, timeLeft, timerOn, breakRef.current);
     })
 
     const formatTime = (time) => {
@@ -45,7 +46,7 @@ function App() {
         setSessionLength(defaultSession);
         setTimeLeft(defaultSession * 60);
         setTimerOn(false);
-        setOnBreak(false);
+        breakRef.current = false;
         beep.pause();
         beep.currentTime = 0;
         clearInterval(localStorage.getItem('int-id'));
@@ -63,8 +64,9 @@ function App() {
         let second = 1000;
         let date = new Date().getTime();
         let nextDate = date + second;
-        let onBreakFlag = onBreak;//needed because things get messy with async state setting & interval below
-
+        //1 https://stackoverflow.com/questions/62484083/setting-an-interval-on-a-click-event-in-react-using-hooks-wont-use-updated-stat
+        //2 https://stackoverflow.com/questions/53024496/state-not-updating-when-using-react-state-hook-within-setinterval
+        //3 https://overreacted.io/making-setinterval-declarative-with-react-hooks/
         //on first activation, create new interval
         if (!timerOn) {
             let interval = setInterval(() => {
@@ -73,13 +75,11 @@ function App() {
                     setTimeLeft((prev) => {
                         if (prev <= 0) {
                             playSound();
-                            if (!onBreakFlag) {
-                                setOnBreak(true)
-                                onBreakFlag = true
+                            if (!breakRef.current) {
+                                breakRef.current = true;
                                 return breakLength*60;
                             } else {
-                                setOnBreak(false)
-                                onBreakFlag = false
+                                breakRef.current = false;
                                 return sessionLength*60;
                             }
                         }
@@ -107,7 +107,7 @@ function App() {
             <div id='session-label'><h4 className="display-6">Session Length</h4>
                 <button id="session-decrement" onClick={() => changeLength(setSessionLength, -1)}>–</button><span id="session-length">{sessionLength}</span><button id="session-increment" onClick={() => changeLength(setSessionLength, 1)}>+</button>
             </div>
-            <div ><h4 className="display-5" id='timer-label'>{onBreak ? 'Break Timer:' : 'Session Timer:'}</h4>
+            <div ><h4 className="display-5" id='timer-label'>{breakRef.current ? 'Break Timer:' : 'Session Timer:'}</h4>
                 <span id="time-left">{formatTime(timeLeft)}</span>
                 <br />
                 <button id="start_stop" onClick={controlTime}>{!timerOn ? <i className="fa-solid fa-play"></i> : <i className="fa-solid fa-pause"></i>}</button>
