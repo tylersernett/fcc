@@ -1,7 +1,7 @@
 function App() {
     const defaultBreak = 5;
-    const defaultSession = 58;
-    
+    const defaultSession = 25;
+
     const [breakLength, setBreakLength] = React.useState(defaultBreak);
     const [sessionLength, setSessionLength] = React.useState(defaultSession);
     const [timeLeft, setTimeLeft] = React.useState(sessionLength * 60);
@@ -24,14 +24,15 @@ function App() {
 
     //change break & session times, but stay between 1 & 60 inclusive
     const changeLength = (func, amount) => {
-        func( (prev) => {
-            if ((prev + amount >= 1) && (prev+amount <=60)) {
+        func((prev) => {
+            if ((prev + amount >= 1) && (prev + amount <= 60)) {
+                //update session length time if the timer isn't active
                 if (func === setSessionLength) {
                     if (!timerOn) {
-                        setTimeLeft( (prev) => ((prev + amount >= 1*60) && (prev+amount <60*60)) ? (sessionLength + amount)*60 : prev);
+                        setTimeLeft((sessionLength + amount) * 60);
                     }
                 }
-                return prev+amount
+                return prev + amount
             } else {
                 return prev
             }
@@ -42,25 +43,47 @@ function App() {
     const resetLengths = () => {
         setBreakLength(defaultBreak);
         setSessionLength(defaultSession);
-        setTimeLeft(defaultSession*60);
+        setTimeLeft(defaultSession * 60);
+        setTimerOn(false);
+        setOnBreak(false);
+        beep.pause();
+        beep.currentTime = 0;
+        clearInterval(localStorage.getItem('int-id'));
     }
+
+    //const beep = new Audio('./beepsound.wav')
+    const playSound = () => {
+        const beep = document.getElementById('beep')
+        beep.currentTime = 0; //allows for re-trigger
+        beep.play();
+    }
+
 
     const controlTime = () => {
         let second = 1000;
         let date = new Date().getTime();
         let nextDate = date + second;
-        //let onBreakVariable = onBreak;
+        let onBreakFlag = onBreak;//needed because things get messy with async state setting & interval below
 
         //on first activation, create new interval
         if (!timerOn) {
-            let interval = setInterval( () => {
+            let interval = setInterval(() => {
                 date = new Date().getTime();
-                if(date > nextDate) {
-                    setTimeLeft( (prev) => {
-                        if (prev <=0 && !onBreak) {
-                            
+                if (date > nextDate) {
+                    setTimeLeft((prev) => {
+                        if (prev <= 0) {
+                            playSound();
+                            if (!onBreakFlag) {
+                                setOnBreak(true)
+                                onBreakFlag = true
+                                return breakLength*60;
+                            } else {
+                                setOnBreak(false)
+                                onBreakFlag = false
+                                return sessionLength*60;
+                            }
                         }
-                        return prev-1;
+                        return prev - 1;
                     })
                     nextDate += second;
                 }
@@ -70,11 +93,12 @@ function App() {
             localStorage.clear();
             localStorage.setItem('int-id', interval);
         } else {
+            //clear the interval out if we just paused
             clearInterval(localStorage.getItem('int-id'));
         }
         setTimerOn(prev => !prev);
     }
-//"https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+
     return (
         <div id="container" >
             <div id='break-label'><h4 className="display-6">Break Length</h4>
@@ -83,11 +107,12 @@ function App() {
             <div id='session-label'><h4 className="display-6">Session Length</h4>
                 <button id="session-decrement" onClick={() => changeLength(setSessionLength, -1)}>–</button><span id="session-length">{sessionLength}</span><button id="session-increment" onClick={() => changeLength(setSessionLength, 1)}>+</button>
             </div>
-            <div id='timer-label'><h4 className="display-5">{onBreak? 'Break Timer:' : 'Session Timer:'}</h4>
+            <div ><h4 className="display-5" id='timer-label'>{onBreak ? 'Break Timer:' : 'Session Timer:'}</h4>
                 <span id="time-left">{formatTime(timeLeft)}</span>
                 <br />
-                <button id="start_stop" onClick={controlTime}>{!timerOn?<i className="fa-solid fa-play"></i>:<i className="fa-solid fa-pause"></i>}</button>
+                <button id="start_stop" onClick={controlTime}>{!timerOn ? <i className="fa-solid fa-play"></i> : <i className="fa-solid fa-pause"></i>}</button>
                 <button id="reset" onClick={resetLengths}><i className="fa-solid fa-rotate-left"></i></button>
+                <audio className="clip" src='./beepsound.wav' id='beep'></audio>
             </div>
 
         </div>
