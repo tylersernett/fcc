@@ -1,13 +1,13 @@
 function App() {
-    const defaultBreak = .05;
-    const defaultSession = .1//25;
+    const defaultBreak = 5;
+    const defaultSession = 25;
 
     const [breakLength, setBreakLength] = React.useState(defaultBreak);
     const [sessionLength, setSessionLength] = React.useState(defaultSession);
     const [timeLeft, setTimeLeft] = React.useState(sessionLength * 60);
     const [timerOn, setTimerOn] = React.useState(false);
-    //const [onBreak, setOnBreak] = React.useState(false);
-    const breakRef = React.useRef(false); //prefer Ref rather than State here-- Ref does not render at each value change. And we can set it without calling a 'set'
+    const breakRef = React.useRef(false); //prefer Ref rather than State here-- 
+    //Ref does not render at each value change. And we can set it without calling a 'set' ⇨ breakRef.current = ___
 
     React.useEffect(() => {
         console.table(breakLength, sessionLength, timeLeft, timerOn, breakRef.current);
@@ -52,21 +52,16 @@ function App() {
         clearInterval(localStorage.getItem('int-id'));
     }
 
-    //const beep = new Audio('./beepsound.wav')
     const playSound = () => {
         const beep = document.getElementById('beep')
         beep.currentTime = 0; //allows for re-trigger
         beep.play();
     }
 
-
     const controlTime = () => {
         let second = 1000;
         let date = new Date().getTime();
         let nextDate = date + second;
-        //1 https://stackoverflow.com/questions/62484083/setting-an-interval-on-a-click-event-in-react-using-hooks-wont-use-updated-stat
-        //2 https://stackoverflow.com/questions/53024496/state-not-updating-when-using-react-state-hook-within-setinterval
-        //3 https://overreacted.io/making-setinterval-declarative-with-react-hooks/
         //on first activation, create new interval
         if (!timerOn) {
             let interval = setInterval(() => {
@@ -77,10 +72,10 @@ function App() {
                             playSound();
                             if (!breakRef.current) {
                                 breakRef.current = true;
-                                return breakLength*60;
+                                return breakLength * 60;
                             } else {
                                 breakRef.current = false;
-                                return sessionLength*60;
+                                return sessionLength * 60;
                             }
                         }
                         return prev - 1;
@@ -100,19 +95,38 @@ function App() {
     }
 
     return (
-        <div id="container" >
-            <div id='break-label'><h4 className="display-6">Break Length</h4>
-                <button id="break-decrement" onClick={() => changeLength(setBreakLength, -1)}>–</button><span id="break-length">{breakLength}</span><button id="break-increment" onClick={() => changeLength(setBreakLength, 1)}>+</button>
+        <div className="container  rounded text-center" >
+            <div className='pb-5 '><span className = 'display-6'>Pomodoro Timer </span><i className="h4 fa-solid fa-clock"></i></div>
+            
+            <div className="row mb-sm-4 ">
+                <div className='col-sm-5 shadow-sm  p-3'>
+                    <div id='break-label'><h4 className="rect h2 fw-light">Break Length</h4>
+                        <button id="break-decrement" className='btn btn-secondary' onClick={() => changeLength(setBreakLength, -1)}><i class="fa-solid fa-minus"></i></button>
+                        <span id="break-length">  {breakLength}  </span>
+                        <button id="break-increment" className='btn btn-secondary' onClick={() => changeLength(setBreakLength, 1)}><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <div className='col-2 '></div>
+                
+                <div className='col-sm-5 shadow-sm p-3'>
+                    <div id='session-label'><h4 className="rect h2 fw-light">Session Length</h4>
+                        <button id="session-decrement" className='btn btn-secondary' onClick={() => changeLength(setSessionLength, -1)}><i class="fa-solid fa-minus"></i></button>
+                        <span id="session-length">  {sessionLength}  </span>
+                        <button id="session-increment" className='btn btn-secondary btn-square-md' onClick={() => changeLength(setSessionLength, 1)}><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
             </div>
-            <div id='session-label'><h4 className="display-6">Session Length</h4>
-                <button id="session-decrement" onClick={() => changeLength(setSessionLength, -1)}>–</button><span id="session-length">{sessionLength}</span><button id="session-increment" onClick={() => changeLength(setSessionLength, 1)}>+</button>
-            </div>
-            <div ><h4 className="display-5" id='timer-label'>{breakRef.current ? 'Break Timer:' : 'Session Timer:'}</h4>
-                <span id="time-left">{formatTime(timeLeft)}</span>
-                <br />
-                <button id="start_stop" onClick={controlTime}>{!timerOn ? <i className="fa-solid fa-play"></i> : <i className="fa-solid fa-pause"></i>}</button>
-                <button id="reset" onClick={resetLengths}><i className="fa-solid fa-rotate-left"></i></button>
-                <audio className="clip" src='./beepsound.wav' id='beep'></audio>
+            
+            <div className='row'>
+                <div className='col '></div>
+                <div className='col-sm-5 shadow-sm p-3' ><h4 className="rect h2 fw-light" id='timer-label'>{breakRef.current ? 'Break Time' : 'Session Time'}</h4>
+                    <button id="start_stop" className='btn btn-secondary btn-square-md' onClick={controlTime}>{!timerOn ? <i className="fa-solid fa-play"></i> : <i className="fa-solid fa-pause"></i>}</button>
+                    <span id="time-left"> {formatTime(timeLeft)} </span>
+                    <button id="reset" className='btn btn-secondary btn-square-md' onClick={resetLengths}><i class="fa-solid fa-arrows-rotate"></i></button>
+                    <audio className="clip" src='./beepsound.wav' id='beep'></audio>
+                </div>
+                <div className='col'></div>
             </div>
 
         </div>
