@@ -6,4 +6,4 @@ live demo: https://tylersernett.github.io/fcc/front-end/projects/drum-machine/in
 
 Things learned: 
 * add event listeners (for keypresses, etc) to the useEffect hook
-* sample.currentTime = 0; allows for re-triggering (else, consecutive button presses won't work until the sample has run its full length)
+* sample.currentTime = 0; allows for re-triggering (else, consecutive button presses won't work until the sample has run its full length).
